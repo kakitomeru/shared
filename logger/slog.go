@@ -4,7 +4,6 @@ import (
 	"context"
 	"log/slog"
 	"os"
-	"time"
 
 	"go.opentelemetry.io/otel/trace"
 )
@@ -17,21 +16,13 @@ func InitSlog(serviceName, appMode string, level slog.Level) {
 	// }
 	output := os.Stdout
 
-	opts := &slog.HandlerOptions{
-		AddSource: true,
-		Level:     level,
-		ReplaceAttr: func(groups []string, a slog.Attr) slog.Attr {
-			if a.Key == slog.TimeKey {
-				a.Key = "timestamp"
-				a.Value = slog.StringValue(a.Value.Time().Format(time.RFC3339Nano))
-			}
-
-			return a
+	prettyHandler := NewPrettyHandler(output, PrettyHandlerOptions{
+		SlogOpts: &slog.HandlerOptions{
+			Level: level,
 		},
-	}
-
-	handler := slog.NewTextHandler(output, opts)
-	baseLogger := slog.New(handler).With(slog.String("service", serviceName))
+		ServiceName: serviceName,
+	})
+	baseLogger := slog.New(prettyHandler)
 
 	globalLogger = baseLogger
 	slog.SetDefault(globalLogger)
@@ -64,17 +55,22 @@ func Ctx(ctx context.Context, baseLogger *slog.Logger) *slog.Logger {
 }
 
 func Info(ctx context.Context, msg string, args ...any) {
-	Ctx(ctx, globalLogger).Info(msg, args...)
+	l := Ctx(ctx, globalLogger)
+	l.Info(msg, args...)
 }
+
 func Warn(ctx context.Context, msg string, args ...any) {
-	Ctx(ctx, globalLogger).Warn(msg, args...)
+	l := Ctx(ctx, globalLogger)
+	l.Warn(msg, args...)
 }
 
 func Error(ctx context.Context, msg string, err error, args ...any) {
-	allArgs := append([]any{slog.Any("error", err)}, args...)
-	Ctx(ctx, globalLogger).Error(msg, allArgs...)
+	allArgs := append([]any{slog.Any("error", err.Error())}, args...)
+	l := Ctx(ctx, globalLogger)
+	l.Error(msg, allArgs...)
 }
 
 func Debug(ctx context.Context, msg string, args ...any) {
-	Ctx(ctx, globalLogger).Debug(msg, args...)
+	l := Ctx(ctx, globalLogger)
+	l.Debug(msg, args...)
 }
