@@ -3,21 +3,15 @@ package env
 import (
 	"errors"
 	"os"
-
-	"github.com/joho/godotenv"
 )
 
 func LoadEnv(envs []string) error {
-	err := godotenv.Load("../.env")
-	if err != nil {
-		return errors.New("unable to load .env file from root path. See .env.example")
-	}
-
 	env := os.Getenv("APP_ENV")
 	if env == "" {
 		return errors.New("APP_ENV is not set. See .env.example")
 	}
 
+	var err error
 	for _, env := range envs {
 		switch env {
 		case "jwt":
