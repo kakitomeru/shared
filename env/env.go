@@ -5,10 +5,14 @@ import (
 	"os"
 )
 
+func returnError(key string) error {
+	return errors.New(key + " is not set. Ensure you used Makefile's command to run the app. Also ensure you have .env file in the service's root path. See .env.example")
+}
+
 func LoadEnv(envs []string) error {
 	env := os.Getenv("APP_ENV")
 	if env == "" {
-		return errors.New("APP_ENV is not set. See .env.example")
+		return returnError("APP_ENV")
 	}
 
 	var err error
@@ -94,7 +98,7 @@ func GetSnippetPort() string {
 func loadJwt() error {
 	jwtSecret := os.Getenv("JWT_SECRET")
 	if jwtSecret == "" {
-		return errors.New("JWT_SECRET is not set. See .env.example")
+		return returnError("JWT_SECRET")
 	}
 
 	return nil
@@ -103,27 +107,27 @@ func loadJwt() error {
 func loadPostgres() error {
 	postgresUser := os.Getenv("POSTGRES_USER")
 	if postgresUser == "" {
-		return errors.New("POSTGRES_USER is not set. See .env.example")
+		return returnError("POSTGRES_USER")
 	}
 
 	postgresPassword := os.Getenv("POSTGRES_PASSWORD")
 	if postgresPassword == "" {
-		return errors.New("POSTGRES_PASSWORD is not set. See .env.example")
+		return returnError("POSTGRES_PASSWORD")
 	}
 
 	postgresHost := os.Getenv("POSTGRES_HOST")
 	if postgresHost == "" {
-		return errors.New("POSTGRES_HOST is not set. See .env.example")
+		return returnError("POSTGRES_HOST")
 	}
 
 	postgresPort := os.Getenv("POSTGRES_PORT")
 	if postgresPort == "" {
-		return errors.New("POSTGRES_PORT is not set. See .env.example")
+		return returnError("POSTGRES_PORT")
 	}
 
 	postgresDB := os.Getenv("POSTGRES_DB")
 	if postgresDB == "" {
-		return errors.New("POSTGRES_DB is not set. See .env.example")
+		return returnError("POSTGRES_DB")
 	}
 
 	return nil
@@ -132,7 +136,7 @@ func loadPostgres() error {
 func loadOtelCollector() error {
 	otelCollector := os.Getenv("OTEL_COLLECTOR")
 	if otelCollector == "" {
-		return errors.New("OTEL_COLLECTOR is not set. See .env.example")
+		return returnError("OTEL_COLLECTOR")
 	}
 
 	return nil
@@ -141,12 +145,12 @@ func loadOtelCollector() error {
 func loadAuth() error {
 	authHost := os.Getenv("AUTH_HOST")
 	if authHost == "" {
-		return errors.New("AUTH_HOST is not set. See .env.example")
+		return returnError("AUTH_HOST")
 	}
 
 	authPort := os.Getenv("AUTH_PORT")
 	if authPort == "" {
-		return errors.New("AUTH_PORT is not set. See .env.example")
+		return returnError("AUTH_PORT")
 	}
 
 	return nil
@@ -155,12 +159,12 @@ func loadAuth() error {
 func loadSnippet() error {
 	snippetHost := os.Getenv("SNIPPET_HOST")
 	if snippetHost == "" {
-		return errors.New("SNIPPET_HOST is not set. See .env.example")
+		return returnError("SNIPPET_HOST")
 	}
 
 	snippetPort := os.Getenv("SNIPPET_PORT")
 	if snippetPort == "" {
-		return errors.New("SNIPPET_PORT is not set. See .env.example")
+		return returnError("SNIPPET_PORT")
 	}
 
 	return nil
@@ -169,12 +173,12 @@ func loadSnippet() error {
 func loadGateway() error {
 	gatewayHost := os.Getenv("GATEWAY_HOST")
 	if gatewayHost == "" {
-		return errors.New("GATEWAY_HOST is not set. See .env.example")
+		return returnError("GATEWAY_HOST")
 	}
 
 	gatewayPort := os.Getenv("GATEWAY_PORT")
 	if gatewayPort == "" {
-		return errors.New("GATEWAY_PORT is not set. See .env.example")
+		return returnError("GATEWAY_PORT")
 	}
 
 	return nil
